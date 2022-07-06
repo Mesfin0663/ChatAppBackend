@@ -7,6 +7,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const cors = require("cors");
 const {notFound, errorHandler}= require('./middlewares/errorMiddleware')
+const router = require("express").Router(); //imports express
 
 // importing rout modules created and maintained separately 
 const userRoute = require("./routes/users")
@@ -31,7 +32,12 @@ mongoose.connect(
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
-app.use(cors());
+const corsOptions ={
+   origin:'http://localhost:3000', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 
 //routes separeted accordingly 
 app.use("/api/users", userRoute); 
@@ -46,3 +52,15 @@ app.use(errorHandler);
 app.listen(8800,()=>{
     console.log("backend server running!");
 });
+
+router.post("/", async (req,res)=>{
+   try{
+      
+     
+      res.status(200).json({"success": "true"});
+
+ 
+   }catch (err){
+       res.status(500).json(err);
+   }
+})
