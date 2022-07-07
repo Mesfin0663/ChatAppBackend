@@ -44,19 +44,16 @@ app.use("/api/messages", messageRoute);
 //Error handlers
 app.use(notFound);
 app.use(errorHandler);
+app.use((req, res, next) => {
+   res.setHeader("Access-Control-Allow-Origin", "*");
+   res.header(
+     "Access-Control-Allow-Headers",
+     "Origin, X-Requested-With, Content-Type, Accept"
+   );
+   next();
+ });
 
 app.listen(port,()=>{
-    console.log("backend server running!");
+    console.log("backend server running on port!" ,port);
 });
 
-router.post("/", async (req,res)=>{
-   try{
-      
-     
-      res.status(200).json({"success": "true"});
-
- 
-   }catch (err){
-       res.status(500).json(err);
-   }
-})
