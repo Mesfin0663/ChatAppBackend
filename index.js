@@ -41,7 +41,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
 
-//Error handlers
+//Error handler
 app.use(notFound);
 app.use(errorHandler);
 
