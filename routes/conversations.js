@@ -28,4 +28,13 @@ router.get("/:userId", async (req,res)=>{
     }
 })
 
+router.get("/convid/:id", async (req,res)=>{
+    try{
+        const conversation = await Conversation.findById(req.params.id);
+       res.status(200).json(conversation);
+    }catch(err){
+        res.status(500).json(err)
+    }
+})
+
 module.exports = router;
