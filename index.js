@@ -6,6 +6,11 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const cors = require("cors");
+const corsOptions ={
+   origin:'http://localhost:3000', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200
+}
 const {notFound, errorHandler}= require('./middlewares/errorMiddleware')
 const router = require("express").Router(); //imports express
 
@@ -33,7 +38,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 //routes separeted accordingly 
 app.use("/api/users", userRoute); 
