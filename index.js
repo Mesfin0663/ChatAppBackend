@@ -22,7 +22,7 @@ const userRoute = require("./routes/users")
 const authRoute = require("./routes/auth")
 const conversationRoute = require("./routes/conversations");
 const messageRoute = require("./routes/messages");
-
+const postRoute = require("./routes/posts");
 //required to process .env files such as mongodb url and other secrets
 dotenv.config();
 
@@ -48,7 +48,7 @@ app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
-
+app.use("/api/posts", postRoute);
 //Error handler
 app.use(notFound);
 app.use(errorHandler);

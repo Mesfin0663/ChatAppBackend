@@ -45,7 +45,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 
-//get a user
+//get a user with id 
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -57,6 +57,20 @@ router.get("/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
+//get a user with both id and username
+router.get("/", async (req,res)=>{
+  const userId = req.query.userId;
+  const username = req.query.username;
+  try{
+    const user = userId
+    ? await User.findById(userId)
+    : await User.findOne({username: username});
+    const {password, updatedAt, ...other} = user._doc;
+    res.status(200).json(other);
+  }catch(err){
+    res.status(500).json(err)
+  }
+})
 //follow a user
 router.put("/:id/follow", async(req,res)=>{
   if(
@@ -113,20 +127,7 @@ router.put("/:id/unfollow", async(req,res)=>{
     res.status(403).json("you can't unfollow yourself");
   }
 })
-//get a user
-router.get("/", async (req,res)=>{
-  const userId = req.query.userId;
-  const username = req.query.username;
-  try{
-    const user = userId
-    ? await User.findById(userId)
-    : await User.findOne({username: username});
-    const {password, updatedAt, ...other} = user._doc;
-    res.status(200).json(other);
-  }catch(err){
-    res.status(500).json(err)
-  }
-})
+
 // router.get("/:id", async (req, res) => {
 //    try {
 //      const user = await User.findById(req.params.id);
