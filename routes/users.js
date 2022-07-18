@@ -72,61 +72,76 @@ router.get("/", async (req,res)=>{
   }
 })
 //follow a user
-router.put("/:id/follow", async(req,res)=>{
-  if(
-    req.body.userId   //follower
-   !== 
-   req.params.id // to be followed
-   ){
-    try{
-      const user = await User.findById(req.params.id); // to be followed object
-      const currentUser = await User.findById(req.body.userId); // follower object
-      if(
-        !user.followers.includes(req.body.userId) //checkes if the follwer is already in the follower list of the followed object
+// router.put("/:id/follow", async(req,res)=>{
+//   if(
+//     req.body.userId   //follower
+//    !== 
+//    req.params.id // to be followed
+//    ){
+//     try{
+//       const user = await User.findById(req.params.id); // to be followed object
+//       const currentUser = await User.findById(req.body.userId); // follower object
+//       if(
+//         !user.followers.includes(req.body.userId) //checkes if the follwer is already in the follower list of the followed object
       
-      ){
+//       ){
 
-           await user.updateOne({$push: {followers: req.body.userId}});// adding the follower in the follower list of the followed object
-           await currentUser.updateOne({$push: {followings: req.params.id}})// adding followed object in the following list of the current follower or the current user
-           res.status(200).json("user has been successfuly folowed")
-          }else{
-        res.status(403).json("you already follow this user")
+//            await user.updateOne({$push: {followers: req.body.userId}});// adding the follower in the follower list of the followed object
+//            await currentUser.updateOne({$push: {followings: req.params.id}})// adding followed object in the following list of the current follower or the current user
+//            res.status(200).json("user has been successfuly folowed")
+//           }else{
+//         res.status(403).json("you already follow this user")
+//       }
+//     } catch(err){
+//       res.status(500).json(err);
+//     }
+//   }else{
+//     res.status(403).json("you cant follow yourself");
+//   }
+// })
+
+//follow a user
+
+router.put("/:id/follow", async (req, res) => {
+  if (req.body.userId !== req.params.id) {
+    try {
+      const user = await User.findById(req.params.id);
+      const currentUser = await User.findById(req.body.userId);
+      if (!user.followers.includes(req.body.userId)) {
+        await user.updateOne({ $push: { followers: req.body.userId } });
+        await currentUser.updateOne({ $push: { followings: req.params.id } });
+        res.status(200).json("user has been followed");
+      } else {
+        res.status(403).json("you allready follow this user");
       }
-    } catch(err){
+    } catch (err) {
       res.status(500).json(err);
     }
-  }else{
+  } else {
     res.status(403).json("you cant follow yourself");
   }
-})
+});
 // unfollow a user
-router.put("/:id/unfollow", async(req,res)=>{
-  if(
-    req.body.userId   //follower
-   !== 
-   req.params.id // to be followed
-   ){
-    try{
-      const user = await User.findById(req.params.id); // to be followed object
-      const currentUser = await User.findById(req.body.userId); // follower object
-      if(
-        user.followers.includes(req.body.userId) //checkes if the follwer is already in the follower list of the followed object
-      
-      ){
 
-           await user.updateOne({$pull: {followers: req.body.userId}});// adding the follower in the follower list of the followed object
-           await currentUser.updateOne({$pull: {followings: req.params.userId}})// adding followed object in the following list of the current follower or the current user
-           res.status(200).json("user has been successfuly unfolowed")
-          }else{
-        res.status(403).json("you don't follow this user")
+router.put("/:id/unfollow", async (req, res) => {
+  if (req.body.userId !== req.params.id) {
+    try {
+      const user = await User.findById(req.params.id);
+      const currentUser = await User.findById(req.body.userId);
+      if (user.followers.includes(req.body.userId)) {
+        await user.updateOne({ $pull: { followers: req.body.userId } });
+        await currentUser.updateOne({ $pull: { followings: req.params.id } });
+        res.status(200).json("user has been unfollowed");
+      } else {
+        res.status(403).json("you dont follow this user");
       }
-    } catch(err){
+    } catch (err) {
       res.status(500).json(err);
     }
-  }else{
-    res.status(403).json("you can't unfollow yourself");
+  } else {
+    res.status(403).json("you cant unfollow yourself");
   }
-})
+});
 
 // router.get("/:id", async (req, res) => {
 //    try {
